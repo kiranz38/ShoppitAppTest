@@ -5,13 +5,21 @@ import styles from './index.scss';
 import store from './reduxStore';
 import { NavComponent } from "./components/NavComponent";
 import { ProductData } from "./components/ProductComponent"
-
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 
 const App = () =>{
-    return (<ProductData />)
+    return (<><NavComponent/><ProductData /></>)
 }
 
 
 
-ReactDom.render( <Provider store={store}><NavComponent/><App/></Provider>,document.getElementById('root'));
+ReactDom.render( <Provider store={store}>
+        <BrowserRouter> 
+			<Switch>
+            <Route path="/" component={App} />
+			<Route  path="/home" component={App} />
+				
+			</Switch>
+		</BrowserRouter>
+   </Provider>,document.getElementById('root'));

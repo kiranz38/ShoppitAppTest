@@ -1,1 +1,1 @@
-export {getShopifyProductsAction} from './getShopifyProducts';
+export {getShopifyProductsAction,postShopifyProductsData} from './getShopifyProducts';

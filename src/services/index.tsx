@@ -1,1 +1,1 @@
-export {getShopifyProducts} from './shopifyProducts'
+export {getShopifyProducts,postShopifyProducts} from './shopifyProducts'
