@@ -1,0 +1,1 @@
+export {getShopifyProductsAction} from './getShopifyProducts';
