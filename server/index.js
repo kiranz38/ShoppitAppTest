@@ -2,7 +2,7 @@ const express = require('express');
 const request = require('request');
 
 const app = express();
-
+let AppCount = 1;
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -21,60 +21,58 @@ app.get('/products', (req, res) => {
         return res.status(500).json({ type: 'error', message: err.message });
       }
       console.log(JSON.parse(body));
-
-      // postData(JSON.parse(body));
-      res.json(JSON.parse(body));
+        if(AppCount === 1){
+          postData(JSON.parse(body));
+        }
+       
+       AppCount++;
+       res.json(JSON.parse(body));
+      // const tableData = getTableData();
+      // console.log(tableData);
+      // res.json(tableData);
     }
   )
 });
-var db = require('knex')({
-  client: 'pg',
-  connection: {
-    host : '127.0.0.1',
-    user : 'ramkumark',
-    password : process.env.APP_DB_PASSWORD,
-    database : 'shoppitdb'
-  }
-});
-app.get('/getProducts', (req, res) => getTableData(req, res, db));
-app.post('/postProducts',(req,res)=>postTableData(req,res,db));
 
-const getTableData = (req, res, db) => {
-  db.select('*').from('ShopifyTable')
-    .then(items => {
-      if(items.length){
-        res.json(items)
-      } else {
-        res.json({dataExists: 'false'})
-      }
-    })
-    .catch(err => res.status(400).json({dbError: 'db error'}))
+
+const { Pool, Client } = require("pg");
+
+const pool = new Pool({
+  user: process.env.APP_USER,
+  host: process.env.APP_HOST,
+  database: process.env.APP_DB,
+  password: process.env.APP_DB_PASSWORD,
+  port: process.env.APP_SERVER_PORT
+});
+
+app.get('/getProducts', (req, res) => getTableData(req, res));
+
+
+const getTableData = () => {
+  let JSONData = {};
+  pool.query(`SELECT * FROM ${process.env.APP_TABLE}`,(err,resp)=>{
+    console.log(err);
+    JSONData = resp;
+  })
+  return JSONData;
 }
 const postData = (data) => {
-  alert(data);
-data.products.forEach(element => {
-  const { title, created_at, body_html, vendor, id, src ,handle } = element;
-  db('ShopifyTable').insert({stringId, body_html, src, title, handle, created_at, vendor})
-    .returning('*')
-    .then(item => {
-      console.log("record inserted")
-    })
-    .catch(err => console.log('db error'));
-});
-}
-const postTableData = (req, res, db) => {
-  
-  console.log(req);
-  const { title, created_at, body_html, vendor, id, src ,handle } = req.body
+ data.products.forEach(element => {
+  const { title, created_at, body_html, vendor, id, image ,handle } = element;
   let stringId = id.toString();
-  const added = new Date()
-  db('ShopifyTable').insert({stringId, body_html, src, title, handle, created_at, vendor})
-    .returning('*')
-    .then(item => {
-      res.json(item)
-    })
-    .catch(err => res.status(400).json({dbError: 'db error'}))
+  
+  const {src} = image ? image : data.products[0].image;
+  pool.query(
+    `INSERT INTO ${process.env.APP_TABLE}(id, body_html, image_src, title, handle, created_at, vendor) VALUES ('${stringId}', '${body_html}', '${src}', '${title}', '${handle}', '${created_at}', '${vendor}')`,
+    (err, res) => {
+      console.log(err, res);
+       pool.end();
+    }
+  );
+  
+ });
 }
+
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`listening on ${PORT}`));

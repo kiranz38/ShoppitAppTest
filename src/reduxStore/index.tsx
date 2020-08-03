@@ -1,6 +1,6 @@
 import { createStore,applyMiddleware,combineReducers } from "redux";
 import ReduxPromise from "redux-promise";
-import { SHOPIFY_PRODUCTS,POST_SHOPIFY_PRODUCTS } from "../helpers";
+import { SHOPIFY_PRODUCTS} from "../helpers";
 
 interface IShopifyProduct {
     type:string,
@@ -20,18 +20,6 @@ interface IShopifyProduct {
                    return state;
                    
            }
-       },
-       postProducts : (state={},action:IShopifyProduct) => {
-        switch (action.type) {
-            case POST_SHOPIFY_PRODUCTS:
-               
-                console.log(action.payload);
-                 return action.payload;
-         
-            default:
-                return state;
-                
-        }
        }
       
       

@@ -1,6 +1,6 @@
 import React,{useState,useEffect} from "react";
 import {useSelector,useDispatch} from "react-redux";
-import { getShopifyProductsAction,postShopifyProductsData } from "../../actions";
+import { getShopifyProductsAction} from "../../actions";
 import { Card,Row,Col,CardImg,InputGroup ,FormControl} from "react-bootstrap";
 import Moment from 'moment';
 import { string } from "prop-types";
@@ -45,7 +45,7 @@ export const ProductData = () => {
    
     
     const finalData =  Products.length > 0 ? Products : productData.length > 0 ? productData : [];
-    if (finalData.length > 0) dispatch(postShopifyProductsData(finalData)) 
+   
         
     const handleChange = (e:any) => {
         setTextValue(e.target.value);
