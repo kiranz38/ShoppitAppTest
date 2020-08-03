@@ -18,9 +18,9 @@ Execution Commands :
 
   To run client use command "npm run dev" : port number 3000
 
-Express with NodeJS backend with PostGress.
 
-Rest API call for backend data retrieval.
+Database and Table Configuration:
 
-React with typescript repo.
+Modify .env file for configuring Database name, table name and Port number for server.
+
 
